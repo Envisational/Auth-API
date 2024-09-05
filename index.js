@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin')
 
 dotenv.config();
 
@@ -17,6 +18,9 @@ app.use(express.json()); // Parse incoming JSON requests
 
 // Use the auth routes
 app.use('/auth', authRoutes);
+
+// Use the admin routes
+app.use('/admin', adminRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
