@@ -1,48 +1,68 @@
 const mongoose = require('mongoose');
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 
 // User schema 
 const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        enum: ['user', 'admin'],
-        default: 'user'
-    }
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
+  failedLoginAttempts: {
+    type: Number,
+    default: 0,
+  },
+  lockUntil: {
+    type: Date,
+  },
 });
 
-// Hash the password before saving 
+// Hash the password before saving the user
 userSchema.pre('save', async (next) => {
-    if (!this.isModified('password')) return next();
+  if (!this.isModified('password')) return next();
 
-    try {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch(error) {
-        next(error);
-    }
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
-// Check password during login
+// Compare the password during login
 userSchema.methods.comparePassword = (candidatePassword) => {
-    return bcrypt.compare(candidatePassword, this.password);
+  return bcrypt.compare(candidatePassword, this.password);
 };
 
+// Method to increment failed login attempts
+userSchema.methods.incrementFailedAttempts = async () => {
+  if (this.failedLoginAttempts >= 4) {
+    this.lockUntil = Date.now() + 30 * 60 * 1000; // Lock for 30 minutes
+  }
+  this.failedLoginAttempts += 1;
+  await this.save();
+};
+
+// Method to reset failed attempts on successful login
+userSchema.methods.resetFailedAttempts = async function () {
+  this.failedLoginAttempts = 0;
+  this.lockUntil = null;
+  await this.save();
+};
 const User = mongoose.model('User', userSchema);
-
 module.exports = User;
-
