@@ -83,6 +83,11 @@ router.post(
         return res.status(403).json({ message: 'Account is locked. Try again later.' });
       }
 
+      // Check for password's existence
+      if (!user.password) {
+        return res.status(400).json({ message: 'No password found for this user' });
+      }
+
       // Compare passwords
       const isMatch = await user.comparePassword(password);
       if (!isMatch) {

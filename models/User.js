@@ -32,8 +32,9 @@ const userSchema = new mongoose.Schema({
 });
 
 // Hash the password before saving the user
-userSchema.pre('save', async (next) => {
-  if (!this.isModified('password')) return next();
+userSchema.pre('save', async function (next) {
+    const user = this;
+    if (!user.isModified('password')) return next();
 
   try {
     const salt = await bcrypt.genSalt(10);
@@ -45,12 +46,12 @@ userSchema.pre('save', async (next) => {
 });
 
 // Compare the password during login
-userSchema.methods.comparePassword = (candidatePassword) => {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
 // Method to increment failed login attempts
-userSchema.methods.incrementFailedAttempts = async () => {
+userSchema.methods.incrementFailedAttempts = async function () {
   if (this.failedLoginAttempts >= 4) {
     this.lockUntil = Date.now() + 30 * 60 * 1000; // Lock for 30 minutes
   }
