@@ -1,9 +1,9 @@
-const express = require('express');
-const { verifyToken, checkRole } = require('../middleware/authMiddleware');
-const adminController = require('../controllers/adminController');
+import express from 'express';
+import { verifyToken, checkRole } from '../middleware/authMiddleware.js';
+import adminController from '../controllers/adminController.js';
 const router = express.Router();
 
 // Admin dashboard route
 router.get('/dashboard', verifyToken, checkRole('admin'), adminController.getDashboard);
 
-module.exports = router;
+export default router;

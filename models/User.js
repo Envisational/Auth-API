@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 // User schema 
 const userSchema = new mongoose.Schema({
@@ -65,5 +65,7 @@ userSchema.methods.resetFailedAttempts = async function () {
   this.lockUntil = null;
   await this.save();
 };
+
 const User = mongoose.model('User', userSchema);
-module.exports = User;
+
+export default User;

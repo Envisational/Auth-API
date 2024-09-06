@@ -1,5 +1,6 @@
 // Admin dashboard access
-exports.getDashboard = (req, res) => {
+const getDashboard = (req, res) => {
     res.json({ message: 'Welcome to the admin dashboard!' });
   };
-  
+
+export default {getDashboard};

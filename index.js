@@ -1,9 +1,9 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const authRoutes = require('./routes/auth');
-const adminRoutes = require('./routes/admin');
-const rateLimit = require('express-rate-limit');
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import authRoutes from './routes/auth.js';
+import adminRoutes from './routes/admin.js';
+import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 

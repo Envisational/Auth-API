@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 // Middleware to verify the JWT token and user role
 const verifyToken = (req, res, next) => {
@@ -27,4 +27,4 @@ const checkRole = (role) => {
     };
 };
 
-module.exports = { verifyToken, checkRole };
+export { verifyToken, checkRole };

@@ -1,6 +1,6 @@
-const express = require('express');
-const { check, validationResult } = require('express-validator');
-const authController = require('../controllers/authController');
+import express from 'express';
+import { check, validationResult } from 'express-validator'; // valodationResult not used
+import authController from '../controllers/authController.js';
 const router = express.Router();
 
 // Register route
@@ -24,4 +24,4 @@ router.post(
   authController.login
 );
 
-module.exports = router;
+export default router;
