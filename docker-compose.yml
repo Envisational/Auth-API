@@ -1,0 +1,20 @@
+version: '3'
+services:
+  app:
+    build: .  # Builds from Dockerfile in the current directory
+    ports:
+      - "3000:3000"  # Exposes port 3000
+    env_file: 
+      - .env  # Load sensitive environment variables from .env
+    depends_on:
+      - mongo  # Ensures MongoDB starts before the app
+
+  mongo:
+    image: mongo  # Use the official MongoDB image
+    ports:
+      - "27017:27017"  # Expose MongoDB port
+    volumes:
+      - mongo-data:/data/db  # Persistent storage for MongoDB data
+
+volumes:
+  mongo-data:
